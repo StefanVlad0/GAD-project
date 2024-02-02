@@ -1,5 +1,6 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
 from .models import Reteta
+from .forms import AdaugaRetetaForm
 # Create your views here.
 
 
@@ -23,3 +24,14 @@ def home(request):
     #     # Adăugați mai multe rețete aici
     # ]
     return render(request, "home.html", {'retete': retete})
+
+def adauga_reteta(request):
+    if request.method == 'POST':
+        form = AdaugaRetetaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = AdaugaRetetaForm()
+
+    return render(request, 'adauga_reteta.html', {'form': form})
