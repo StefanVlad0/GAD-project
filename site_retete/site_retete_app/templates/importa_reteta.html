@@ -1,0 +1,11 @@
+<!-- templates/adauga_reteta.html -->
+{% extends "base.html" %}
+{% block title %} Importa Reteta {% endblock %}
+{% block content %}
+<h2>Importa Reteta</h2>
+<form method="post" action="{% url 'importa_reteta' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Importa Reteta</button>
+</form>
+{% endblock %}

@@ -1,6 +1,8 @@
 from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from .models import Reteta
-from .forms import AdaugaRetetaForm
+from .forms import AdaugaRetetaForm, ImportaRetetaForm
+from bs4 import BeautifulSoup
+import requests
 # Create your views here.
 
 
@@ -52,3 +54,42 @@ def reteta_delete(request, id_reteta):
     reteta = get_object_or_404(Reteta, pk=id_reteta)
     reteta.delete()
     return redirect('home')
+
+def importa_reteta(request):
+    if request.method == 'POST':
+        form = ImportaRetetaForm(request.POST)
+        if form.is_valid():
+            link_reteta = form.cleaned_data['link_reteta']
+            reteta = extrage_reteta(link_reteta)
+            # Salvați reteta în baza de date sau faceți orice altă acțiune dorită
+            print(reteta)
+            Reteta.objects.create(
+                nume=reteta['nume_reteta'],
+                timp=reteta['timp'],
+                dificultate=str(reteta['dificultate']),  # Convertiți dificultatea în șir
+                ingrediente=', '.join(reteta['ingrediente']),  # Convertiți set-ul de ingrediente în șir
+            )
+            return redirect('home')
+    else:
+        form = ImportaRetetaForm()
+
+    return render(request, 'importa_reteta.html', {'form': form})
+
+def extrage_reteta(link_reteta):
+    response = requests.get(link_reteta)
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    nume_reteta = soup.find('h1', class_='oRecipeHeader-title').text.strip()
+    timp = soup.find('div', class_='mTimer-time').text.strip()
+    container_dificultate = soup.find('div', class_='oRecipeHeader-meta')
+    dificultate = len(container_dificultate.find_all('span', class_='icon_chefsCapFilled'))
+    ingrediente = {ing.text.strip() for ing in soup.find_all('span', class_='oIngredientBox-ingName')}
+
+    reteta = {
+        'nume_reteta': nume_reteta,
+        'timp': timp,
+        'dificultate': dificultate,
+        'ingrediente': ingrediente,
+    }
+
+    return reteta
