@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block title %} Lista de Retete {% endblock %}
 {% block content %}
-<h2>Lista de Retete</h2>
-<a href="{% url 'adauga_reteta' %}">Adauga Reteta</a>
-<a href="{% url 'importa_reteta' %}">Importa Reteta</a>
+<h2 style="margin-top: 50px;">Lista de Retete</h2>
+<div style="margin-top: 35px;"><a href="{% url 'adauga_reteta' %}">Adauga Reteta</a></div>
+<div style="margin-bottom: 35px;"><a href="{% url 'importa_reteta' %}">Importa Reteta</a></div>
 <!--<h2>Importa Reteta</h2>
 <form method="post" action="{% url 'importa_reteta' %}">
     {% csrf_token %}
@@ -12,11 +12,11 @@
 </form>-->
 <ul>
     {% for reteta in retete %}
-        <li>
+        <li style="margin-bottom: 35px;">
             <a href="/reteta/{{ reteta.pk }}"><strong>{{ reteta.nume }}</strong></a><br>
             Timp: {{ reteta.timp }}<br>
             Dificultate: {{ reteta.dificultate }}<br>
-            Ingrediente: {{ reteta.ingrediente|linebreaks }}<br>
+            Ingrediente: {{ reteta.ingrediente }}<br>
             <a href="/reteta_modifica/{{ reteta.pk }}">Modifica reteta.</a>
             <a href="/reteta_delete/{{ reteta.pk }}">Sterge reteta.</a>
         </li>
