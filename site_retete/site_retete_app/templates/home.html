@@ -10,6 +10,8 @@
             Timp: {{ reteta.timp }}<br>
             Dificultate: {{ reteta.dificultate }}<br>
             Ingrediente: {{ reteta.ingrediente|linebreaks }}<br>
+            <a href="/reteta_modifica/{{ reteta.pk }}">Modifica reteta.</a>
+            <a href="/reteta_delete/{{ reteta.pk }}">Sterge reteta.</a>
         </li>
     {% endfor %}
 </ul>
