@@ -6,7 +6,7 @@
 <ul>
     {% for reteta in retete %}
         <li>
-            <strong>{{ reteta.nume }}</strong><br>
+            <a href="/reteta/{{ reteta.pk }}"><strong>{{ reteta.nume }}</strong></a><br>
             Timp: {{ reteta.timp }}<br>
             Dificultate: {{ reteta.dificultate }}<br>
             Ingrediente: {{ reteta.ingrediente|linebreaks }}<br>
