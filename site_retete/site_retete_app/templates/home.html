@@ -2,10 +2,11 @@
 {% block title %} Lista de Retete {% endblock %}
 {% block content %}
 <h2>Lista de Retete</h2>
+<a href="{% url 'adauga_reteta' %}">Adauga Reteta</a>
 <ul>
     {% for reteta in retete %}
         <li>
-            <strong>{{ reteta.nume }}</strong><br>
+            <a href="/reteta/{{ reteta.pk }}"><strong>{{ reteta.nume }}</strong></a><br>
             Timp: {{ reteta.timp }}<br>
             Dificultate: {{ reteta.dificultate }}<br>
             Ingrediente: {{ reteta.ingrediente|linebreaks }}<br>

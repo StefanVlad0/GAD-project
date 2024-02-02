@@ -1,0 +1,12 @@
+<!-- templates/adauga_reteta.html -->
+{% extends "base.html" %}
+{% block title %} Adauga Reteta {% endblock %}
+{% block content %}
+<h2>Vizualizeaza Reteta</h2>
+<li>
+        <strong>{{ reteta.nume }}</strong><br>
+        Timp: {{ reteta.timp }}<br>
+        Dificultate: {{ reteta.dificultate }}<br>
+        Ingrediente: {{ reteta.ingrediente|linebreaks }}<br>
+</li>
+{% endblock %}

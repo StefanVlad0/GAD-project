@@ -1,5 +1,6 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from .models import Reteta
+from .forms import AdaugaRetetaForm
 # Create your views here.
 
 
@@ -23,3 +24,26 @@ def home(request):
     #     # Adăugați mai multe rețete aici
     # ]
     return render(request, "home.html", {'retete': retete})
+
+def adauga_reteta(request):
+    if request.method == 'POST':
+        form = AdaugaRetetaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = AdaugaRetetaForm()
+
+    return render(request, 'adauga_reteta.html', {'form': form})
+
+def reteta_view(request, id_reteta):
+    reteta= get_object_or_404(Reteta, pk=id_reteta)
+    return render(request, 'vizualizeaza_reteta.html', {'reteta': reteta})
+
+def reteta_update(request, id_reteta):
+    reteta= get_object_or_404(Reteta, pk=id_reteta)
+    form = AdaugaRetetaForm(request.POST or None, instance=reteta)
+    if form.is_valid():
+        form.save()
+        return redirect(f'/reteta/{id_reteta}')
+    return render(request, 'modifica_reteta.html', {'form':form})

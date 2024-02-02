@@ -1,0 +1,11 @@
+<!-- templates/adauga_reteta.html -->
+{% extends "base.html" %}
+{% block title %} Adauga Reteta {% endblock %}
+{% block content %}
+<h2>Modifica Reteta</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Modifica Reteta</button>
+</form>
+{% endblock %}
