@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %} Lista de Retete {% endblock %}
+{% block content %}
+<h2>Lista de Retete</h2>
+<ul>
+    {% for reteta in retete %}
+        <li>
+            <strong>{{ reteta.nume }}</strong><br>
+            Timp: {{ reteta.timp }}<br>
+            Dificultate: {{ reteta.dificultate }}<br>
+            Ingrediente: {{ reteta.ingrediente|linebreaks }}<br>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
