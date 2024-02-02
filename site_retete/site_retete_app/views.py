@@ -47,3 +47,8 @@ def reteta_update(request, id_reteta):
         form.save()
         return redirect(f'/reteta/{id_reteta}')
     return render(request, 'modifica_reteta.html', {'form':form})
+
+def reteta_delete(request, id_reteta):
+    reteta = get_object_or_404(Reteta, pk=id_reteta)
+    reteta.delete()
+    return redirect('home')
