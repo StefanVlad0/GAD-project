@@ -4,12 +4,6 @@
 <h2 style="margin-top: 50px;">Lista de Retete</h2>
 <div style="margin-top: 35px;"><a href="{% url 'adauga_reteta' %}">Adauga Reteta</a></div>
 <div style="margin-bottom: 35px;"><a href="{% url 'importa_reteta' %}">Importa Reteta</a></div>
-<!--<h2>Importa Reteta</h2>
-<form method="post" action="{% url 'importa_reteta' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Importa Reteta</button>
-</form>-->
 <ul>
     {% for reteta in retete %}
         <li style="margin-bottom: 35px;">
