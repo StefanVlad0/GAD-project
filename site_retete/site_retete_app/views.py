@@ -2,10 +2,17 @@ from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from .models import Reteta
 from .forms import AdaugaRetetaForm, ImportaRetetaForm
 from bs4 import BeautifulSoup
+from django.contrib.auth.decorators import login_required
 import requests
 # Create your views here.
 
+def verifica_autentificare(request, template):
+    if request.user.is_authenticated:
+        return render(request, template)
+    else:
+        return render(request, 'not_log.html')
 
+@login_required
 def lista_retete(request):
     # retete = Reteta.objects.all()
     retete = [
@@ -19,14 +26,12 @@ def lista_retete(request):
 
 def home(request):
     retete = Reteta.objects.all()
-    # retete = [
-    #     {'nume': 'Pui cu legume', 'timp': '30 minute', 'dificultate': 'Ușor', 'ingrediente': 'Pui, legume'},
-    #     {'nume': 'Paste Carbonara', 'timp': '20 minute', 'dificultate': 'Mediu',
-    #      'ingrediente': 'Paste, ou, bacon, parmezan'},
-    #     # Adăugați mai multe rețete aici
-    # ]
-    return render(request, "home.html", {'retete': retete})
+    if request.user.is_authenticated:
+        return render(request, "home.html", {'retete': retete})
+    else:
+        return render(request, 'not_log.html')
 
+@login_required
 def adauga_reteta(request):
     if request.method == 'POST':
         form = AdaugaRetetaForm(request.POST)
@@ -38,10 +43,12 @@ def adauga_reteta(request):
 
     return render(request, 'adauga_reteta.html', {'form': form})
 
+@login_required
 def reteta_view(request, id_reteta):
     reteta= get_object_or_404(Reteta, pk=id_reteta)
     return render(request, 'vizualizeaza_reteta.html', {'reteta': reteta})
 
+@login_required
 def reteta_update(request, id_reteta):
     reteta= get_object_or_404(Reteta, pk=id_reteta)
     form = AdaugaRetetaForm(request.POST or None, instance=reteta)
@@ -50,10 +57,12 @@ def reteta_update(request, id_reteta):
         return redirect(f'/reteta/{id_reteta}')
     return render(request, 'modifica_reteta.html', {'form':form})
 
+@login_required
 def reteta_delete(request, id_reteta):
     reteta = get_object_or_404(Reteta, pk=id_reteta)
     reteta.delete()
     return redirect('home')
+
 
 def importa_reteta(request):
     if request.method == 'POST':
@@ -61,13 +70,13 @@ def importa_reteta(request):
         if form.is_valid():
             link_reteta = form.cleaned_data['link_reteta']
             reteta = extrage_reteta(link_reteta)
-            # Salvați reteta în baza de date sau faceți orice altă acțiune dorită
+
             print(reteta)
             Reteta.objects.create(
                 nume=reteta['nume_reteta'],
                 timp=reteta['timp'],
-                dificultate=str(reteta['dificultate']),  # Convertiți dificultatea în șir
-                ingrediente=', '.join(reteta['ingrediente']),  # Convertiți set-ul de ingrediente în șir
+                dificultate=str(reteta['dificultate']),
+                ingrediente=', '.join(reteta['ingrediente']),
             )
             return redirect('home')
     else:
