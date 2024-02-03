@@ -3,8 +3,20 @@ from .models import Reteta
 from .forms import AdaugaRetetaForm, ImportaRetetaForm
 from bs4 import BeautifulSoup
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
 import requests
 # Create your views here.
+
+# def login_view(request):
+#     if request.method == 'POST':
+#         username = request.POST['username']
+#         password = request.POST['password']
+#         user = authenticate(request, username=username, password=password)
+#         if user is not None:
+#             login(request, user)
+#             # Redirecționează către o pagină de succes.
+#         else:
+#             # Returnează o 'formă de autentificare' invalidă.
 
 def verifica_autentificare(request, template):
     if request.user.is_authenticated:
@@ -24,12 +36,15 @@ def lista_retete(request):
     return render(request, 'lista_retete.html', {'retete': retete})
 
 
+def logout_view(request):
+    logout(request)
+    return redirect('home')
+
+@login_required()
 def home(request):
     retete = Reteta.objects.all()
     if request.user.is_authenticated:
         return render(request, "home.html", {'retete': retete})
-    else:
-        return render(request, 'not_log.html')
 
 @login_required
 def adauga_reteta(request):
